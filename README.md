@@ -33,7 +33,7 @@ Para executar o programa principal:
    uv run main.py
 
 Saída esperada:
-   Seu IP público é: 201.x.x.x
+   Seu IP público é: x.x.x.x
 
 
 Build automatizado
@@ -42,24 +42,9 @@ Para gerar os pacotes instaláveis:
    uv build
 
 Os artefatos estarão na pasta dist/:
-- meu_sistema-0.1.0.tar.gz  (distribuição do código-fonte)
-- meu_sistema-0.1.0-py3-none-any.whl  (pacote binário instalável)
+- meu_sistema-0.1.0.tar.gz             -> distribuição do código-fonte
+- meu_sistema-0.1.0-py3-none-any.whl   -> pacote binário instalável
 
 Exemplo de instalação do arquivo .whl:
    pip install dist/meu_sistema-0.1.0-py3-none-any.whl
 
-
-Estrutura do projeto
---------------------
-meu_sistema/
-├── main.py
-├── pyproject.toml
-├── uv.lock
-├── README.txt
-└── .gitignore
-
-
-Autor
------
-Nome: Seu Nome
-Email: seuemail@example.com
