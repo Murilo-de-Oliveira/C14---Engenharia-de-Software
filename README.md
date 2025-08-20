@@ -20,7 +20,7 @@ Requisitos
 Instalação e configuração
 -------------------------
 1. Clonar o repositório:
-   git clone https://github.com/seuusuario/meu_sistema.git
+   git clone https://github.com/Murilo-de-Oliveira/C14---Engenharia-de-Software.git
    cd meu_sistema
 
 2. Instalar dependências:
@@ -33,7 +33,7 @@ Para executar o programa principal:
    uv run main.py
 
 Saída esperada:
-   Seu IP público é: x.x.x.x
+   Usuário encontrado: {'login': 'octocat', 'name': 'The Octocat', 'public_repos': 8, 'followers': 19208, 'following': 9, 'url': 'https://github.com/octocat'} | Seu IP público é: x.x.x.x
 
 
 Build automatizado
