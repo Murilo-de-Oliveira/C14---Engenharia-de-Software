@@ -1,3 +1,4 @@
+testando mudanca readme para forçar conflito
 MEU SISTEMA (Exemplo com UV)
 
 Descrição
@@ -47,4 +48,3 @@ Os artefatos estarão na pasta dist/:
 
 Exemplo de instalação do arquivo .whl:
    pip install dist/meu_sistema-0.1.0-py3-none-any.whl
-
