@@ -1,0 +1,10 @@
+[project]
+name = "meu-sistema"
+version = "0.1.0"
+description = "Exemplo de projeto com UV e a biblioteca HTTPX"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "httpx>=0.28.1",
+    "pytest>=8.4.1",
+]
