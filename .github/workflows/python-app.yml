@@ -4,44 +4,49 @@
 name: Python CI
 
 on:
-  workflow_dispatch:
   push:
+    branches: 'main'
     paths:
      - 'github-actions/**'
   pull_request:
+    branches: 'main'
     paths:
      - 'github-actions/**'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-and-tests:
+    name: Build & Tests
+    runs-on: ubuntu-latests
 
     defaults:
       run:
-        working-directory: github-actions
-        
+        working-directory: ./github-actions
+
     steps:
-      - name: Checkout do repositório
+      - name: 1. Checkout do repositório
         uses: actions/checkout@v4
-        
-      - name: Configurar Python
+
+      - name: 2. Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
       
-      - name: Instalar dependências
+      - name: 3. Cache de dependências do UV
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+      
+      - name: 4. Instalar dependências com UV
         run: |
-          python -m pip install --upgrade pip
           pip install uv
-          if [ -f pyproject.toml ]; uv sync; fi
+          uv sync
+      
+      - name: 5. Rodar Linter (Flake8) com UV
+        run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-      - name: Rodar linters
-        run: |
-          pip install flake8
-          flake8 . --count --max-line-length=88 --statistics
-
-      - name: Rodar testes
-        run: |
-          pip install pytest
-          pytest -v
+      - name: 6. Rodar Testes (Pytest) com UV
+        run: uv run pytest -v
         
