@@ -4,6 +4,7 @@
 name: Python CI
 
 on:
+  workflow-dispatch:
   push:
     branches: 'main'
     paths:
