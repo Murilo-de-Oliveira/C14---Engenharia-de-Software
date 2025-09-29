@@ -16,7 +16,7 @@ on:
 jobs:
   build-and-tests:
     name: Build & Tests
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
 
     defaults:
       run:
