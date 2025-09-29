@@ -1,3 +1,53 @@
-.gitignore
-__pycache__
-.venv
+# Arquivos e pastas de ambiente virtual
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+*.eggs/
+ 
+# Arquivos de cache / compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+ 
+# Configurações locais / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+ 
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.bak
+*.pid
+ 
+# Cobertura de testes
+htmlcov/
+.coverage
+.coverage.*
+.cache/
+.pytest_cache/
+ 
+# Configurações específicas de ferramentas
+.mypy_cache/
+.dmypy.json
+.pyre/
+ 
+# Arquivos de build/distribuição
+dist/
+build/
+*.tar.gz
+*.whl
+ 
+# Dependências lockadas
+uv.lock
+poetry.lock
+Pipfile.lock
+ 
+# Outros
+.DS_Store
+Thumbs.db
