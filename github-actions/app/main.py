@@ -57,6 +57,6 @@ def delete_task(task_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tarefa não encontrada")
     return
 
-@app.get("/")
+@app.get("/", status_code=status.HTTP_200_OK)
 def root():
     return {'status': 'ok'}
