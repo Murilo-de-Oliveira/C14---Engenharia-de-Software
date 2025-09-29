@@ -5,6 +5,9 @@ name: Python CI
 
 on:
   workflow_dispatch:
+    branches: 'main'
+    paths:
+     - 'github-actions/**'
   push:
     branches: 'main'
     paths:
