@@ -1,4 +1,5 @@
 import pytest
+from fastapi import HTTPException
 from app.models import Task
 from app.database import (
     create_task_db,
@@ -8,6 +9,7 @@ from app.database import (
     delete_task_db,
     clear_db,
 )
+from app import main
 
 @pytest.fixture(autouse=True)
 def db_cleanup():
@@ -60,3 +62,60 @@ def test_clear_db_resets():
     assert get_all_tasks_db() == []
     t = create_task_db(Task(id=0, title="Novo"))
     assert t.id == 1
+
+def test_create_task_calls_create_task_db(mocker):
+    """Verifica se create_task chama create_task_db corretamente."""
+    fake_task = {"id": 1, "title": "Teste", "description": "Mocked"}
+    mock_create = mocker.patch("app.main.create_task_db", return_value=fake_task)
+
+    payload = main.TaskCreate(title="Teste", description="Mocked")
+    result = main.create_task(payload)
+
+    mock_create.assert_called_once()
+    assert result == fake_task
+
+
+def test_read_task_not_found_raises(mocker):
+    """Se get_task_db retornar None, deve levantar 404."""
+    mocker.patch("app.main.get_task_db", return_value=None)
+
+    with pytest.raises(HTTPException) as exc:
+        main.read_task(999)
+    assert exc.value.status_code == 404
+
+
+def test_update_task_calls_update_task_db(mocker):
+    """Verifica se update_task chama update_task_db corretamente."""
+    mocker.patch("app.main.get_task_db", return_value={"id": 1})
+    mock_update = mocker.patch("app.main.update_task_db", return_value={"id": 1, "title": "Novo"})
+
+    payload = main.TaskCreate(title="Novo")
+    result = main.update_task(1, payload)
+
+    mock_update.assert_called_once()
+    assert result["title"] == "Novo"
+
+
+def test_update_task_not_found_raises(mocker):
+    """update_task deve levantar 404 se ID não existir."""
+    mocker.patch("app.main.get_task_db", return_value=None)
+    payload = main.TaskCreate(title="Title")
+
+    with pytest.raises(HTTPException) as exc:
+        main.update_task(123, payload)
+    assert exc.value.status_code == 404
+
+
+def test_delete_task_calls_delete_task_db(mocker):
+    """delete_task deve chamar delete_task_db e não levantar erro se True."""
+    mocker.patch("app.main.delete_task_db", return_value=True)
+    assert main.delete_task(1) is None
+
+
+def test_delete_task_not_found_raises(mocker):
+    """delete_task deve levantar 404 se delete_task_db retornar False."""
+    mocker.patch("app.main.delete_task_db", return_value=False)
+
+    with pytest.raises(HTTPException) as exc:
+        main.delete_task(999)
+    assert exc.value.status_code == 404
