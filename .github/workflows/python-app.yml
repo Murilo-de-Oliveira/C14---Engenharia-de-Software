@@ -40,7 +40,7 @@ jobs:
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Rodar Testes e Gerar Relatório
-        run: uv run pytest -v --junitxml=test-report.xml
+        run: uv run pytest tests/test_unit.py -v --junitxml=unit-test-report.xml
 
       - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
@@ -73,7 +73,7 @@ jobs:
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Rodar Testes e Gerar Relatório
-        run: uv run pytest -v --junitxml=test-report.xml
+        run: uv run pytest tests/test_integration.py -v --junitxml=integration-test-report.xml
 
       - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
