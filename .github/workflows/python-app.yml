@@ -15,8 +15,8 @@ on:
      - 'github-actions/**'
 
 jobs:
-  tests:
-    name: Testes
+  unit-tests:
+    name: Testes Unitários
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: "3.13"
       
-      - name: 4. Instalar dependências com UV
+      - name: Instalar dependências com UV
         run: |
           pip install uv
           uv sync
@@ -42,16 +42,49 @@ jobs:
       - name: Rodar Testes e Gerar Relatório
         run: uv run pytest -v --junitxml=test-report.xml
 
-      - name: Salvar Relatório de Testes como Artefato
+      - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
         with:
-          name: relatorio-de-testes
-          path: github-actions/test-report.xml
+          name: relatorio-testes-unitarios
+          path: github-actions/unit-test-report.xml
+
+  integration-tests:
+    name: Testes de Integração
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./github-actions
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      
+      - name: Instalar dependências com UV
+        run: |
+          pip install uv
+          uv sync
+      
+      - name: Rodar Linter (Flake8) com UV
+        run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Rodar Testes e Gerar Relatório
+        run: uv run pytest -v --junitxml=test-report.xml
+
+      - name: Salvar Relatório de Testes Unitários
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-testes-unitarios
+          path: github-actions/integration-test-report.xml
 
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: tests
+    needs: [unit-tests, integration-tests]
     defaults:
       run:
         working-directory: ./github-actions
@@ -80,16 +113,17 @@ jobs:
   notify:
     name: Notificação
     runs-on: ubuntu-latest
-    needs: tests  # pode rodar em paralelo ao build
+    needs: [unit-tests, integration-tests]
 
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
+      - name: Instalar MailUtils
+        run: sudo apt-get update && sudo apt-get install -y mailutils 
+
       - name: Executar script de notificação
         env:
           DEST_EMAIL: ${{ secrets.DEST_EMAIL }}
-        run: | 
-          sh scripts/shell.sh
-          echo "E-mail enviado para $DEST_EMAIL"
+        run: sh github-actions/scripts/shell.sh
         

@@ -1,6 +1,3 @@
-cd Aula-GitHub-Actions
-ls
 echo "Rodou o pipeline"
 pwd
-sudo apt-get install mailutils
-echo "Mandando e-mail com mail do linux" | mail -s "a subject" "$DEST_EMAIL"
+echo "Mandando e-mail com mail do linux para $DEST_EMAIL" | mail -s "a subject" "$DEST_EMAIL"
