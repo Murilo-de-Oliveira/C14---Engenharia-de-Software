@@ -125,5 +125,5 @@ jobs:
       - name: Executar script de notificação
         env:
           DEST_EMAIL: ${{ secrets.DEST_EMAIL }}
-        run: sh github-actions/scripts/shell.sh
+        run: sh scripts/shell.sh
         
