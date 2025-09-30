@@ -12,41 +12,84 @@ on:
     branches: 'main'
     paths:
      - 'github-actions/**'
+  workflow_dispatch:
 
 jobs:
-  build-and-tests:
-    name: Build & Tests
+  tests:
+    name: Testes
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ./github-actions
 
     steps:
-      - name: 1. Checkout do repositório
+      - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: 2. Configurar Python
+      - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      
-      - name: 3. Cache de dependências do UV
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/uv
-          key: ${{ runner.os }}-uv-${{ hashFiles('**/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-uv-
       
       - name: 4. Instalar dependências com UV
         run: |
           pip install uv
           uv sync
       
-      - name: 5. Rodar Linter (Flake8) com UV
+      - name: Rodar Linter (Flake8) com UV
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-      - name: 6. Rodar Testes (Pytest) com UV
-        run: uv run pytest -v
+      - name: Rodar Testes e Gerar Relatório
+        run: uv run pytest -v --junitxml=test-report.xml
+
+      - name: Salvar Relatório de Testes como Artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-de-testes
+          path: github-actions/test-report.xml
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        working-directory: ./github-actions
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar ferramenta de build
+        run: pip install build
+
+      - name: Construir o pacote
+        run: python -m build
+
+      - name: Salvar Pacote como Artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacote-python
+          path: github-actions/dist
+  
+  notify:
+    name: Notificação
+    runs-on: ubuntu-latest
+    needs: test  # pode rodar em paralelo ao build
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Executar script de notificação
+        env:
+          DEST_EMAIL: ${{ secrets.DEST_EMAIL }}
+        run: | 
+          sh scripts/shell.sh
+          echo "E-mail enviado para $DEST_EMAIL"
         
