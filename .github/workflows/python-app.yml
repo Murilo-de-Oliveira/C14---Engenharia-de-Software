@@ -80,7 +80,7 @@ jobs:
   notify:
     name: Notificação
     runs-on: ubuntu-latest
-    needs: test  # pode rodar em paralelo ao build
+    needs: tests  # pode rodar em paralelo ao build
 
     steps:
       - name: Checkout do repositório
