@@ -40,7 +40,7 @@ jobs:
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Rodar Testes e Gerar Relatório
-        run: uv run pytest tests/test_unit.py -v --config-file=pyproject.unit.toml --junitxml=test-report.xml
+        run: uv run pytest tests/test_unit.py -v --cov-config=pyproject.unit.toml --junitxml=unit-test-report.xml
 
       - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
