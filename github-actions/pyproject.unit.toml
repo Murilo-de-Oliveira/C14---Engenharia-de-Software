@@ -1,0 +1,16 @@
+[tool.pytest.ini_options]
+addopts = "--cov=app --cov-report=term-missing"
+testpaths = [
+    "tests/unit"
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "app/main.py",  # ignora a main só nos unitários
+]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
