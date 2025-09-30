@@ -40,13 +40,13 @@ jobs:
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Rodar Testes e Gerar Relatório
-        run: uv run pytest tests/test_unit.py -v --cov-config=pyproject.unit.toml --junitxml=unit-test-report.xml
+        run: uv run pytest tests/test_unit.py -v --cov-config=pyproject.unit.toml --junitxml=unit-test-report.xml --html=unit-test-report.html --self-contained-html
 
       - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
         with:
           name: relatorio-testes-unitarios
-          path: github-actions/unit-test-report.xml
+          path: github-actions/unit-test-report.html
 
   integration-tests:
     name: Testes de Integração
@@ -73,13 +73,13 @@ jobs:
         run: uv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Rodar Testes e Gerar Relatório
-        run: uv run pytest tests/test_integration.py -v --config-file=pyproject.toml --junitxml=test-report.xml
+        run: uv run pytest tests/test_integration.py -v --config-file=pyproject.toml --junitxml=test-report.xml --html=integration-test-report.html --self-contained-html
 
       - name: Salvar Relatório de Testes Unitários
         uses: actions/upload-artifact@v4
         with:
-          name: relatorio-testes-unitarios
-          path: github-actions/integration-test-report.xml
+          name: relatorio-testes-integracao
+          path: github-actions/integration-test-report.html
 
   build:
     name: Build
